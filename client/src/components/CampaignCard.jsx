@@ -38,10 +38,18 @@ function SpendBar({ spend, spendLimit }) {
 }
 
 export default function CampaignCard({ campaign }) {
+  const isLive = campaign.campaignStatus === 'ENABLED';
+
   return (
     <div className={`card ${STATUS_ACCENT[campaign.status] || 'accent-green'}`}>
       <div className="card-header">
-        <h3>{campaign.campaignName}</h3>
+        <div>
+          <h3>{campaign.campaignName}</h3>
+          <span className={`live-pill ${isLive ? 'live-pill-on' : 'live-pill-off'}`}>
+            <span className="live-pill-dot" />
+            {isLive ? 'Live' : campaign.campaignStatus === 'PAUSED' ? 'Paused' : 'Removed'}
+          </span>
+        </div>
         <StatusBadge status={campaign.status} />
       </div>
 

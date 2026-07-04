@@ -21,6 +21,7 @@ export default function CampaignTable({ campaigns, mediaBuyers, onAssign }) {
         <thead>
           <tr>
             <th>Campaign</th>
+            <th>Live?</th>
             <th>Spend</th>
             <th>Clicks</th>
             <th>Landing Clicks</th>
@@ -35,6 +36,12 @@ export default function CampaignTable({ campaigns, mediaBuyers, onAssign }) {
           {campaigns.map((c) => (
             <tr key={c.campaignId}>
               <td>{c.campaignName}</td>
+              <td>
+                <span className={`live-pill ${c.campaignStatus === 'ENABLED' ? 'live-pill-on' : 'live-pill-off'}`}>
+                  <span className="live-pill-dot" />
+                  {c.campaignStatus === 'ENABLED' ? 'Live' : c.campaignStatus === 'PAUSED' ? 'Paused' : 'Removed'}
+                </span>
+              </td>
               <td>{formatCurrency(c.spend)}</td>
               <td>{c.clicks}</td>
               <td>{c.landingClicks}</td>
@@ -64,7 +71,7 @@ export default function CampaignTable({ campaigns, mediaBuyers, onAssign }) {
           ))}
           {campaigns.length === 0 && (
             <tr>
-              <td colSpan={showAssignment ? 9 : 8} className="empty-row">
+              <td colSpan={showAssignment ? 10 : 9} className="empty-row">
                 No campaign data yet. Waiting for the next monitoring cycle…
               </td>
             </tr>

@@ -72,6 +72,9 @@ const getCampaigns = asyncHandler(async (req, res) => {
       return {
         campaignId: metrics.campaignId,
         campaignName: metrics.campaignName,
+        // Google Ads' own ENABLED/PAUSED/REMOVED - distinct from `status`
+        // below, which is our health verdict (HEALTHY/WARNING/CRITICAL).
+        campaignStatus: metrics.status || 'ENABLED',
         spend: metrics.spend,
         spendLimit,
         clicks: metrics.clicks,

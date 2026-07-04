@@ -16,6 +16,13 @@ const campaignMetricsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // Google Ads campaign.status: ENABLED, PAUSED, or REMOVED. Defaults to
+    // ENABLED for mock data / older rows that predate this field.
+    status: {
+      type: String,
+      enum: ['ENABLED', 'PAUSED', 'REMOVED'],
+      default: 'ENABLED',
+    },
     spend: {
       type: Number,
       required: true,

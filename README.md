@@ -88,6 +88,12 @@ npm run dev             # starts the API + cron scheduler on http://localhost:50
 | `ADMIN_USERNAME` / `ADMIN_PASSWORD` / `ADMIN_NAME` | Used **once** by `npm run seed:admin` to create the first admin account in the database. Not read on every login - media buyer accounts are created afterwards from the dashboard's Media Buyers page. |
 | `JWT_SECRET` / `JWT_EXPIRES_IN` | Signs the dashboard's login session token. Set `JWT_SECRET` to a long random string in production. |
 
+### Google Ads: single account vs. MCC (manager account)
+
+- **Single account**: set `GOOGLE_ADS_CUSTOMER_ID` to that account's ID, leave `GOOGLE_ADS_LOGIN_CUSTOMER_ID` blank.
+- **MCC managing multiple client accounts**: set `GOOGLE_ADS_CUSTOMER_ID` and `GOOGLE_ADS_LOGIN_CUSTOMER_ID` to the **MCC's** ID. On every fetch cycle, the server automatically discovers every client account linked under that MCC (via the `customer_client` resource) and pulls campaigns from all of them — no per-account configuration, and a new account added to the MCC later is picked up on the next cycle with zero code/config changes.
+- Every campaign's real Google Ads status (`ENABLED` / `PAUSED` / `REMOVED`) is fetched too and shown as a "Live" / "Paused" badge on the dashboard — not just active campaigns, so you can see when something's been paused.
+
 ### Getting a Telegram chat ID
 
 1. Message your bot (anything) after creating it via BotFather.
