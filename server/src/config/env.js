@@ -39,6 +39,16 @@ const env = {
     defaultSpendLimit: parseFloat(process.env.DEFAULT_SPEND_LIMIT) || 50,
   },
 
+  // How long to keep time-series/log data before MongoDB auto-deletes it
+  // (TTL indexes) - these collections grow every minute/click and would
+  // otherwise fill up storage indefinitely.
+  retention: {
+    alertHistoryDays: parseInt(process.env.ALERT_HISTORY_RETENTION_DAYS, 10) || 90,
+    campaignMetricsDays: parseInt(process.env.METRICS_RETENTION_DAYS, 10) || 30,
+    landingClicksDays: parseInt(process.env.LANDING_CLICKS_RETENTION_DAYS, 10) || 30,
+    gclidLogsDays: parseInt(process.env.GCLID_RETENTION_DAYS, 10) || 180,
+  },
+
   auth: {
     // Used only once, by scripts/seedAdminUser.js, to bootstrap the first
     // admin account in the Users collection. Login itself always checks the

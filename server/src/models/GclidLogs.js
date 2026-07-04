@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const env = require('../config/env');
 
 /**
  * One document per UNIQUE gclid ever seen. The unique index on `gclid` is
@@ -32,10 +33,15 @@ const gclidLogsSchema = new mongoose.Schema(
       type: Date,
       required: true,
       default: Date.now,
-      index: true,
     },
   },
   { timestamps: true }
 );
+
+// Auto-delete gclid records older than the retention window. Real Google
+// Ads gclids are unique per click and never legitimately recur, so a long
+// retention (default 180 days) bounds storage growth without risking a
+// stale click being miscounted as "new" again in practice.
+gclidLogsSchema.index({ firstSeenAt: 1 }, { expireAfterSeconds: env.retention.gclidLogsDays * 24 * 60 * 60 });
 
 module.exports = mongoose.model('GclidLogs', gclidLogsSchema);

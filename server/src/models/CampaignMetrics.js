@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const env = require('../config/env');
 
 /**
  * One document per campaign per poll cycle (every minute).
@@ -44,12 +45,15 @@ const campaignMetricsSchema = new mongoose.Schema(
       type: Date,
       required: true,
       default: Date.now,
-      index: true,
     },
   },
   { timestamps: true }
 );
 
 campaignMetricsSchema.index({ campaignId: 1, timestamp: -1 });
+
+// Auto-delete metrics rows older than the retention window - only recent
+// history is needed for the dashboard's per-campaign charts.
+campaignMetricsSchema.index({ timestamp: 1 }, { expireAfterSeconds: env.retention.campaignMetricsDays * 24 * 60 * 60 });
 
 module.exports = mongoose.model('CampaignMetrics', campaignMetricsSchema);

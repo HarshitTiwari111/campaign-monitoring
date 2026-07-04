@@ -241,6 +241,27 @@ You can call the endpoint directly too, for testing or non-JS integrations:
 GET /api/tracking/visit?campaignId=123&campaignName=My+Campaign&gclid=abc123&landingPageUrl=https://example.com/lp
 ```
 
+## Data Retention
+
+`CampaignMetrics`, `LandingClicks`, `GclidLogs`, and `AlertHistory` all get a
+new row every minute/click/alert - left unbounded they'd eventually fill up
+your MongoDB storage (Atlas's free tier caps out at 512MB). Each has a TTL
+index that auto-deletes rows past a retention window, configurable via env
+vars (defaults shown):
+
+| Env var | Default | Collection |
+|---|---|---|
+| `METRICS_RETENTION_DAYS` | 30 | `CampaignMetrics` |
+| `LANDING_CLICKS_RETENTION_DAYS` | 30 | `LandingClicks` |
+| `GCLID_RETENTION_DAYS` | 180 | `GclidLogs` |
+| `ALERT_HISTORY_RETENTION_DAYS` | 90 | `AlertHistory` |
+
+No manual cleanup needed - MongoDB's background TTL monitor deletes expired
+documents automatically (runs roughly every 60s, not instant). The server
+also runs `npm run migrate:indexes` on every boot (idempotent - safe to
+re-run) so changing a retention value just means editing the env var and
+redeploying.
+
 ## Deploying to Render
 
 A `render.yaml` blueprint at the repo root defines both services - the

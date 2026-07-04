@@ -5,6 +5,7 @@ const app = require('./app');
 const { startCampaignMonitorJob } = require('./jobs/campaignMonitorJob');
 const { seedDefaultRules } = require('./utils/seedAlertRules');
 const { seedAdminUser } = require('./utils/seedAdminUser');
+const { migrateIndexes } = require('./utils/migrateIndexes');
 
 async function start() {
   await connectDB();
@@ -13,6 +14,7 @@ async function start() {
   // deploy (e.g. Render) works without a separate manual seed step.
   await seedDefaultRules();
   await seedAdminUser();
+  await migrateIndexes();
 
   app.listen(env.port, () => {
     logger.info(`Server running on port ${env.port} [${env.nodeEnv}]`);

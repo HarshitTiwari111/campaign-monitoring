@@ -9,7 +9,8 @@
     "dev": "nodemon src/server.js",
     "dev:memory": "node scripts/runWithMemoryMongo.js",
     "seed:rules": "node src/utils/seedAlertRules.js",
-    "seed:admin": "node src/utils/seedAdminUser.js"
+    "seed:admin": "node src/utils/seedAdminUser.js",
+    "migrate:indexes": "node src/utils/migrateIndexes.js"
   },
   "keywords": [
     "google-ads",

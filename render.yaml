@@ -47,6 +47,14 @@ services:
         generateValue: true
       - key: JWT_EXPIRES_IN
         value: 7d
+      - key: ALERT_HISTORY_RETENTION_DAYS
+        value: "90"
+      - key: METRICS_RETENTION_DAYS
+        value: "30"
+      - key: LANDING_CLICKS_RETENTION_DAYS
+        value: "30"
+      - key: GCLID_RETENTION_DAYS
+        value: "180"
 
   - type: web
     name: campaign-monitoring-client

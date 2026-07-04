@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const env = require('../config/env');
 
 /**
  * Persisted record of every alert actually sent (or attempted). Also doubles
@@ -51,12 +52,15 @@ const alertHistorySchema = new mongoose.Schema(
       type: Date,
       required: true,
       default: Date.now,
-      index: true,
     },
   },
   { timestamps: true }
 );
 
 alertHistorySchema.index({ campaignId: 1, ruleType: 1, sentAt: -1 });
+
+// Auto-delete alerts older than the retention window so this collection
+// doesn't grow forever (every triggered rule adds a row here).
+alertHistorySchema.index({ sentAt: 1 }, { expireAfterSeconds: env.retention.alertHistoryDays * 24 * 60 * 60 });
 
 module.exports = mongoose.model('AlertHistory', alertHistorySchema);
