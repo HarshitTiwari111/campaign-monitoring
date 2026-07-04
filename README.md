@@ -254,7 +254,7 @@ vars (defaults shown):
 | `METRICS_RETENTION_DAYS` | 30 | `CampaignMetrics` |
 | `LANDING_CLICKS_RETENTION_DAYS` | 30 | `LandingClicks` |
 | `GCLID_RETENTION_DAYS` | 180 | `GclidLogs` |
-| `ALERT_HISTORY_RETENTION_DAYS` | 90 | `AlertHistory` |
+| `ALERT_HISTORY_RETENTION_DAYS` | 30 | `AlertHistory` |
 
 No manual cleanup needed - MongoDB's background TTL monitor deletes expired
 documents automatically (runs roughly every 60s, not instant). The server
