@@ -1184,6 +1184,17 @@ tbody tr:nth-child(even):hover {
   min-width: 160px;
 }
 
+.filter-bar .field input,
+.filter-bar .field select {
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.filter-bar .export-btn {
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
 .filter-bar .export-field {
   flex-shrink: 0;
   margin-left: auto;
