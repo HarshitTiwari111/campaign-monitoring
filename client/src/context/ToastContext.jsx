@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useState } from 'react';
+import { Check, AlertCircle } from 'lucide-react';
 
 const ToastContext = createContext(null);
 let idCounter = 0;
@@ -24,16 +25,7 @@ export function ToastProvider({ children }) {
       <div className="toast-stack">
         {toasts.map((t) => (
           <div key={t.id} className={`toast toast-${t.type}`} onClick={() => dismissToast(t.id)}>
-            {t.type === 'success' ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 6 9 17l-5-5" />
-              </svg>
-            ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 8v5M12 16h.01" />
-              </svg>
-            )}
+            {t.type === 'success' ? <Check size={16} /> : <AlertCircle size={16} />}
             {t.message}
           </div>
         ))}

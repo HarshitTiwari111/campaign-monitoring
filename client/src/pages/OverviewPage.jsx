@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Check } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import StatsOverview from '../components/StatsOverview';
 import CampaignCard from '../components/CampaignCard';
@@ -97,9 +98,7 @@ export default function OverviewPage() {
           <LoadingSpinner label="Loading campaigns…" />
         ) : attentionCampaigns.length === 0 ? (
           <div className="all-clear">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
+            <Check size={20} />
             All campaigns are healthy - nothing needs attention right now.
           </div>
         ) : (

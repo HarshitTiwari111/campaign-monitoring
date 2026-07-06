@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { Download } from 'lucide-react';
 
 function downloadBlob(content, filename, mimeType) {
   const blob = new Blob([content], { type: mimeType });
@@ -70,15 +71,11 @@ export default function ExportButtons({ columns, rows, fetchAll, filename, title
   return (
     <div className="export-buttons">
       <button className="export-btn" onClick={() => runExport('csv')} disabled={csvExporting || noData}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-        </svg>
+        <Download size={14} />
         {csvExporting ? 'Exporting…' : 'CSV'}
       </button>
       <button className="export-btn" onClick={() => runExport('pdf')} disabled={pdfExporting || noData}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-        </svg>
+        <Download size={14} />
         {pdfExporting ? 'Exporting…' : 'PDF'}
       </button>
     </div>
