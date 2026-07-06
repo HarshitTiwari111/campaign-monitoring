@@ -16,6 +16,8 @@ export default function OverviewPage() {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [mediaBuyers, setMediaBuyers] = useState(null);
   const [campaignSearch, setCampaignSearch] = useState('');
+  const [liveFilter, setLiveFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   const {
     data: campaigns,
@@ -62,9 +64,12 @@ export default function OverviewPage() {
   const visibleAttentionCampaigns = attentionCampaigns.slice(0, MAX_ATTENTION_CARDS);
   const hiddenAttentionCount = attentionCampaigns.length - visibleAttentionCampaigns.length;
 
-  const filteredCampaigns = campaignSearch
-    ? campaignList.filter((c) => c.campaignName.toLowerCase().includes(campaignSearch.toLowerCase()))
-    : campaignList;
+  const filteredCampaigns = campaignList.filter((c) => {
+    if (campaignSearch && !c.campaignName.toLowerCase().includes(campaignSearch.toLowerCase())) return false;
+    if (liveFilter && c.campaignStatus !== liveFilter) return false;
+    if (statusFilter && c.status !== statusFilter) return false;
+    return true;
+  });
 
   return (
     <div className="page">
@@ -127,6 +132,23 @@ export default function OverviewPage() {
               onChange={(e) => setCampaignSearch(e.target.value)}
               placeholder="e.g. Weight Loss"
             />
+          </label>
+          <label className="field">
+            <span>Live status</span>
+            <select value={liveFilter} onChange={(e) => setLiveFilter(e.target.value)}>
+              <option value="">All</option>
+              <option value="ENABLED">Live</option>
+              <option value="PAUSED">Paused</option>
+            </select>
+          </label>
+          <label className="field">
+            <span>Health</span>
+            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+              <option value="">All</option>
+              <option value="HEALTHY">Healthy</option>
+              <option value="WARNING">Warning</option>
+              <option value="CRITICAL">Critical</option>
+            </select>
           </label>
         </div>
         <CampaignTable
