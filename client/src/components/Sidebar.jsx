@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import ConfirmModal from './ConfirmModal';
+import Logo from './Logo';
 
 const NAV_ITEMS = [
   {
@@ -102,7 +103,9 @@ export default function Sidebar() {
       <aside className={`sidebar ${menuOpen ? 'menu-open' : ''}`}>
         <div className="sidebar-top-row">
           <div className="sidebar-brand">
-            <div className="brand-mark">CM</div>
+            <div className="brand-mark">
+              <Logo />
+            </div>
             <div>
               <h1>Campaign Monitoring</h1>
               <p className="subtitle">Google Ads CPS alerts</p>

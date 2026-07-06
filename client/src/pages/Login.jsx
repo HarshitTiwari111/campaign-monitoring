@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 
 export default function Login() {
   const { login } = useAuth();
@@ -30,7 +31,9 @@ export default function Login() {
   return (
     <div className="login-screen">
       <form className="login-card" onSubmit={handleSubmit}>
-        <div className="brand-mark login-brand-mark">CM</div>
+        <div className="brand-mark login-brand-mark">
+          <Logo size={26} />
+        </div>
         <h1>Campaign Monitoring</h1>
         <p className="subtitle">Sign in to view your dashboard</p>
 
