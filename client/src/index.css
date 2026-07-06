@@ -148,6 +148,12 @@ body {
   padding: 24px 16px;
 }
 
+.sidebar-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .sidebar-brand {
   display: flex;
   align-items: center;
@@ -168,6 +174,24 @@ body {
   font-size: 11.5px;
   margin: 1px 0 0;
   color: #8b9ac2;
+}
+
+.hamburger-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.hamburger-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-nav {
@@ -1096,6 +1120,80 @@ tbody tr:nth-child(even):hover {
   transform: translateX(16px);
 }
 
+/* Confirmation modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 28, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 200;
+}
+
+.modal-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 24px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+}
+
+.modal-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modal-card p {
+  margin: 0 0 22px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-btn-cancel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  color: var(--text-heading);
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.modal-btn-cancel:hover {
+  background: var(--bg-subtle);
+}
+
+.modal-btn-confirm {
+  background: var(--danger-text);
+  color: white;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.modal-btn-confirm:hover {
+  opacity: 0.9;
+}
+
 /* ========== Responsive: tablet & mobile ========== */
 @media (max-width: 768px) {
   .app-shell-sidebar {
@@ -1105,62 +1203,46 @@ tbody tr:nth-child(even):hover {
     overflow: visible;
   }
 
+  /* Collapsed by default: just the top row (brand + hamburger) shows.
+     Tapping the hamburger adds .menu-open, which expands nav + footer
+     as a dropdown panel below the top row. */
   .sidebar {
     width: 100%;
     height: auto;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 12px 16px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    padding: 14px 16px;
+    overflow: visible;
   }
 
   .sidebar-brand {
     padding: 0;
-    flex-shrink: 0;
   }
 
   .sidebar-brand .subtitle {
     display: none;
   }
 
-  .sidebar-nav {
-    flex-direction: row;
-    flex: none;
-    gap: 4px;
-    overflow-x: auto;
+  .hamburger-btn {
+    display: flex;
   }
 
-  .sidebar-link {
-    white-space: nowrap;
-    border-left: none;
-    border-bottom: 3px solid transparent;
+  .sidebar-nav,
+  .sidebar-footer {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.22s ease, opacity 0.18s ease, margin-top 0.22s ease;
   }
 
-  .sidebar-link.active {
-    border-left-color: transparent;
-    border-bottom-color: #818cf8;
+  .sidebar.menu-open .sidebar-nav,
+  .sidebar.menu-open .sidebar-footer {
+    max-height: 480px;
+    opacity: 1;
+    margin-top: 14px;
   }
 
   .sidebar-footer {
-    flex-direction: row;
-    align-items: center;
-    border-top: none;
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: 0;
-    padding-left: 12px;
-    margin-left: auto;
-  }
-
-  .theme-toggle span,
-  .theme-toggle {
-    padding: 8px;
-  }
-
-  .sidebar-user-text {
-    display: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 14px;
   }
 
   .main-content {

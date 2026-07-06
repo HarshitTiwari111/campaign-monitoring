@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import ConfirmModal from './ConfirmModal';
 
 const NAV_ITEMS = [
   {
@@ -86,45 +88,83 @@ function ThemeToggle() {
 
 export default function Sidebar() {
   const { name, username, role, isAdmin, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navItems = isAdmin ? [...NAV_ITEMS, ...ADMIN_NAV_ITEMS, PROFILE_NAV_ITEM] : [...NAV_ITEMS, PROFILE_NAV_ITEM];
 
+  const confirmLogout = () => {
+    setShowLogoutConfirm(false);
+    logout();
+  };
+
   return (
-    <aside className="sidebar">
-      <div className="sidebar-brand">
-        <div className="brand-mark">CM</div>
-        <div>
-          <h1>Campaign Monitoring</h1>
-          <p className="subtitle">Google Ads CPS alerts</p>
-        </div>
-      </div>
-
-      <nav className="sidebar-nav">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.to === '/'}
-            className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
-          >
-            {item.icon}
-            {item.label}
-          </NavLink>
-        ))}
-      </nav>
-
-      <div className="sidebar-footer">
-        <ThemeToggle />
-        <div className="sidebar-user">
-          <div className="sidebar-avatar">{(name || username || '?').slice(0, 1).toUpperCase()}</div>
-          <div className="sidebar-user-text">
-            <span>{name || username}</span>
-            <span className="sidebar-role">{role === 'admin' ? 'Admin' : 'Media Buyer'}</span>
+    <>
+      <aside className={`sidebar ${menuOpen ? 'menu-open' : ''}`}>
+        <div className="sidebar-top-row">
+          <div className="sidebar-brand">
+            <div className="brand-mark">CM</div>
+            <div>
+              <h1>Campaign Monitoring</h1>
+              <p className="subtitle">Google Ads CPS alerts</p>
+            </div>
           </div>
+          <button
+            className="hamburger-btn"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
         </div>
-        <button className="logout-btn" onClick={logout}>
-          Log out
-        </button>
-      </div>
-    </aside>
+
+        <nav className="sidebar-nav">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === '/'}
+              onClick={() => setMenuOpen(false)}
+              className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+            >
+              {item.icon}
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="sidebar-footer">
+          <ThemeToggle />
+          <div className="sidebar-user">
+            <div className="sidebar-avatar">{(name || username || '?').slice(0, 1).toUpperCase()}</div>
+            <div className="sidebar-user-text">
+              <span>{name || username}</span>
+              <span className="sidebar-role">{role === 'admin' ? 'Admin' : 'Media Buyer'}</span>
+            </div>
+          </div>
+          <button className="logout-btn" onClick={() => setShowLogoutConfirm(true)}>
+            Log out
+          </button>
+        </div>
+      </aside>
+
+      {showLogoutConfirm && (
+        <ConfirmModal
+          title="Log out?"
+          message="Are you sure you want to log out of Campaign Monitoring?"
+          confirmLabel="Log out"
+          onConfirm={confirmLogout}
+          onCancel={() => setShowLogoutConfirm(false)}
+        />
+      )}
+    </>
   );
 }
