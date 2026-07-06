@@ -102,13 +102,16 @@ export default function AlertHistoryPage() {
               Clear filters
             </button>
           )}
-          <ExportButtons
-            columns={EXPORT_COLUMNS}
-            rows={alerts}
-            fetchAll={fetchAllForExport}
-            filename="alert-history"
-            title="Alert History"
-          />
+          <div className="field export-field">
+            <span>&nbsp;</span>
+            <ExportButtons
+              columns={EXPORT_COLUMNS}
+              rows={alerts}
+              fetchAll={fetchAllForExport}
+              filename="alert-history"
+              title="Alert History"
+            />
+          </div>
         </div>
 
         {loading ? <LoadingSpinner label="Loading alerts…" /> : <AlertHistoryTable alerts={alerts} />}

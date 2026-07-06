@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 function downloadBlob(content, filename, mimeType) {
   const blob = new Blob([content], { type: mimeType });
@@ -31,8 +31,9 @@ function toCsv(columns, rows) {
  * complete filtered result set instead of just what's on screen.
  */
 export default function ExportButtons({ columns, rows, fetchAll, filename, title }) {
-  const [exporting, setExporting] = useState(false);
-  const disabled = exporting || (rows.length === 0 && !fetchAll);
+  const [csvExporting, setCsvExporting] = useState(false);
+  const [pdfExporting, setPdfExporting] = useState(false);
+  const noData = rows.length === 0 && !fetchAll;
 
   const getRows = async () => {
     if (fetchAll) return fetchAll();
@@ -40,7 +41,8 @@ export default function ExportButtons({ columns, rows, fetchAll, filename, title
   };
 
   const runExport = async (format) => {
-    setExporting(true);
+    const setLoading = format === 'csv' ? setCsvExporting : setPdfExporting;
+    setLoading(true);
     try {
       const data = await getRows();
       if (data.length === 0) return;
@@ -51,7 +53,7 @@ export default function ExportButtons({ columns, rows, fetchAll, filename, title
         const doc = new jsPDF({ orientation: columns.length > 5 ? 'landscape' : 'portrait' });
         doc.setFontSize(14);
         doc.text(title, 14, 16);
-        doc.autoTable({
+        autoTable(doc, {
           startY: 22,
           head: [columns.map((c) => c.label)],
           body: data.map((row) => columns.map((c) => c.value(row))),
@@ -61,23 +63,23 @@ export default function ExportButtons({ columns, rows, fetchAll, filename, title
         doc.save(`${filename}.pdf`);
       }
     } finally {
-      setExporting(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="export-buttons">
-      <button className="export-btn" onClick={() => runExport('csv')} disabled={disabled}>
+      <button className="export-btn" onClick={() => runExport('csv')} disabled={csvExporting || noData}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
         </svg>
-        {exporting ? 'Exporting…' : 'CSV'}
+        {csvExporting ? 'Exporting…' : 'CSV'}
       </button>
-      <button className="export-btn" onClick={() => runExport('pdf')} disabled={disabled}>
+      <button className="export-btn" onClick={() => runExport('pdf')} disabled={pdfExporting || noData}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
         </svg>
-        {exporting ? 'Exporting…' : 'PDF'}
+        {pdfExporting ? 'Exporting…' : 'PDF'}
       </button>
     </div>
   );
