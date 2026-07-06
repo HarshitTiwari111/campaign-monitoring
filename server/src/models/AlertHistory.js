@@ -41,7 +41,7 @@ const alertHistorySchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['SENT', 'FAILED'],
+      enum: ['SENT', 'FAILED', 'MUTED'],
       default: 'SENT',
     },
     telegramResponse: {

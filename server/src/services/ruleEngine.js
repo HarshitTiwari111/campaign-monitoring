@@ -104,10 +104,11 @@ async function evaluateAndAlert(metricsDoc, rules) {
   // bot/chat, falling back to the shared admin bot if unassigned or unset.
   const campaignDoc = await Campaign.findOne({ campaignId: metricsDoc.campaignId }).populate(
     'assignedTo',
-    'telegramChatId telegramBotToken name'
+    'telegramChatId telegramBotToken mutedRuleTypes name'
   );
   const chatId = campaignDoc?.assignedTo?.telegramChatId || env.telegram.chatId;
   const botToken = campaignDoc?.assignedTo?.telegramBotToken || env.telegram.botToken;
+  const mutedRuleTypes = campaignDoc?.assignedTo?.mutedRuleTypes || [];
 
   for (const result of triggeredResults) {
     const { rule, recommendation, metricsSnapshot } = result;
@@ -118,19 +119,35 @@ async function evaluateAndAlert(metricsDoc, rules) {
       continue;
     }
 
-    const { ok, description, message } = await telegramService.sendAlert(
-      {
+    const alertData = {
+      campaignName: metricsDoc.campaignName,
+      spend: metricsSnapshot.spend,
+      clicks: metricsSnapshot.clicks,
+      landingClicks: metricsSnapshot.landingClicks,
+      gclidCount: metricsSnapshot.gclidCount,
+      recommendation,
+      timestamp: metricsDoc.timestamp,
+    };
+
+    // The rule still fires and gets logged - only the Telegram send is
+    // skipped, per the assigned buyer's own notification preference.
+    if (mutedRuleTypes.includes(rule.type)) {
+      await alertService.recordHistory({
+        campaignId: metricsDoc.campaignId,
         campaignName: metricsDoc.campaignName,
-        spend: metricsSnapshot.spend,
-        clicks: metricsSnapshot.clicks,
-        landingClicks: metricsSnapshot.landingClicks,
-        gclidCount: metricsSnapshot.gclidCount,
+        ruleType: rule.type,
+        ruleName: rule.name,
         recommendation,
-        timestamp: metricsDoc.timestamp,
-      },
-      chatId,
-      botToken
-    );
+        message: telegramService.formatAlertMessage(alertData),
+        metricsSnapshot,
+        status: 'MUTED',
+        telegramResponse: 'Muted by media buyer notification preferences',
+      });
+      logger.info(`Alert [${rule.type}] for ${metricsDoc.campaignName}: muted by user preference`);
+      continue;
+    }
+
+    const { ok, description, message } = await telegramService.sendAlert(alertData, chatId, botToken);
 
     await alertService.recordHistory({
       campaignId: metricsDoc.campaignId,

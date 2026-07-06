@@ -2,6 +2,12 @@ function formatTime(value) {
   return new Date(value).toLocaleString();
 }
 
+const STATUS_PILL_CLASS = {
+  SENT: 'pill-success',
+  FAILED: 'pill-error',
+  MUTED: 'pill-neutral',
+};
+
 export default function AlertHistoryTable({ alerts }) {
   return (
     <div className="table-wrapper">
@@ -23,9 +29,7 @@ export default function AlertHistoryTable({ alerts }) {
               <td>{alert.ruleName || alert.ruleType}</td>
               <td>{alert.recommendation}</td>
               <td>
-                <span className={`pill ${alert.status === 'SENT' ? 'pill-success' : 'pill-error'}`}>
-                  {alert.status}
-                </span>
+                <span className={`pill ${STATUS_PILL_CLASS[alert.status] || 'pill-error'}`}>{alert.status}</span>
               </td>
             </tr>
           ))}

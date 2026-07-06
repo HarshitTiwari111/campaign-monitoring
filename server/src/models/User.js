@@ -43,6 +43,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    // Rule types this user doesn't want Telegram notifications for, even on
+    // campaigns assigned to them. The rule still evaluates and is recorded
+    // in AlertHistory (status MUTED) - only the Telegram send is skipped.
+    mutedRuleTypes: {
+      type: [String],
+      default: [],
+    },
     active: {
       type: Boolean,
       default: true,

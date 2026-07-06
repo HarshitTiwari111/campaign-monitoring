@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { fetchUsers, createUserAccount, updateUserAccount, deactivateUserAccount } from '../services/api';
+import { useToast } from '../context/ToastContext';
 
 const EMPTY_FORM = { username: '', password: '', name: '', role: 'media_buyer', telegramChatId: '', telegramBotToken: '' };
 
@@ -99,6 +100,7 @@ export default function UsersPage() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [creating, setCreating] = useState(false);
   const [formError, setFormError] = useState('');
+  const { showToast } = useToast();
 
   const load = () => {
     setLoading(true);
@@ -118,6 +120,7 @@ export default function UsersPage() {
       const newUser = await createUserAccount(form);
       setUsers((prev) => [...prev, newUser]);
       setForm(EMPTY_FORM);
+      showToast(`${newUser.name} added`);
     } catch (err) {
       setFormError(err.response?.data?.message || 'Could not create account');
     } finally {
@@ -128,12 +131,16 @@ export default function UsersPage() {
   const handleUpdate = async (id, payload) => {
     const updated = await updateUserAccount(id, payload);
     setUsers((prev) => prev.map((u) => (u._id === id ? updated : u)));
+    showToast(`${updated.name} saved`);
   };
 
   const handleDeactivate = async (id) => {
     const updated = await deactivateUserAccount(id);
     setUsers((prev) => prev.map((u) => (u._id === id ? updated : u)));
+    showToast(`${updated.name} deactivated`);
   };
+
+  const hasMediaBuyers = users.some((u) => u.role === 'media_buyer');
 
   return (
     <div className="page">
@@ -141,6 +148,18 @@ export default function UsersPage() {
 
       {(error || formError) && (
         <div className="error-banner">{formError || `Could not reach the API. (${error?.message})`}</div>
+      )}
+
+      {!loading && !hasMediaBuyers && (
+        <div className="all-clear empty-hint">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          No media buyers yet - add your first one below, then assign them a campaign from the Overview page.
+        </div>
       )}
 
       <section>

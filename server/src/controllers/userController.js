@@ -10,6 +10,7 @@ function toSafeUser(user) {
     role: user.role,
     telegramChatId: user.telegramChatId,
     telegramBotToken: user.telegramBotToken,
+    mutedRuleTypes: user.mutedRuleTypes,
     active: user.active,
     createdAt: user.createdAt,
   };
@@ -90,12 +91,13 @@ const getMyProfile = asyncHandler(async (req, res) => {
   res.json({ success: true, data: toSafeUser(user) });
 });
 
-/** PUT /api/users/me - any logged-in user: self-service Telegram bot token + chat ID. */
+/** PUT /api/users/me - any logged-in user: self-service Telegram bot token + chat ID + muted rules. */
 const updateMyProfile = asyncHandler(async (req, res) => {
-  const { telegramChatId, telegramBotToken } = req.body;
+  const { telegramChatId, telegramBotToken, mutedRuleTypes } = req.body;
   const update = {};
   if (telegramChatId !== undefined) update.telegramChatId = telegramChatId || '';
   if (telegramBotToken !== undefined) update.telegramBotToken = telegramBotToken || '';
+  if (mutedRuleTypes !== undefined) update.mutedRuleTypes = mutedRuleTypes;
 
   const user = await User.findByIdAndUpdate(req.user.userId, update, { new: true, runValidators: true });
   res.json({ success: true, data: toSafeUser(user) });

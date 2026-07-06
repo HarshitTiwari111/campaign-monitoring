@@ -1,35 +1,46 @@
 import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { fetchMyProfile, updateMyProfile } from '../services/api';
+import { fetchMyProfile, updateMyProfile, fetchRules } from '../services/api';
+import { useToast } from '../context/ToastContext';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
+  const [rules, setRules] = useState([]);
   const [telegramChatId, setTelegramChatId] = useState('');
   const [telegramBotToken, setTelegramBotToken] = useState('');
+  const [mutedRuleTypes, setMutedRuleTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [savedAt, setSavedAt] = useState(null);
   const [error, setError] = useState(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
-    fetchMyProfile()
-      .then((data) => {
-        setProfile(data);
-        setTelegramChatId(data.telegramChatId || '');
-        setTelegramBotToken(data.telegramBotToken || '');
+    Promise.all([fetchMyProfile(), fetchRules()])
+      .then(([profileData, rulesData]) => {
+        setProfile(profileData);
+        setTelegramChatId(profileData.telegramChatId || '');
+        setTelegramBotToken(profileData.telegramBotToken || '');
+        setMutedRuleTypes(profileData.mutedRuleTypes || []);
+        setRules(rulesData);
       })
       .catch(setError)
       .finally(() => setLoading(false));
   }, []);
 
+  const toggleMute = (ruleType) => {
+    setMutedRuleTypes((prev) =>
+      prev.includes(ruleType) ? prev.filter((t) => t !== ruleType) : [...prev, ruleType]
+    );
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
-      const updated = await updateMyProfile({ telegramChatId, telegramBotToken });
+      const updated = await updateMyProfile({ telegramChatId, telegramBotToken, mutedRuleTypes });
       setProfile(updated);
-      setSavedAt(new Date());
+      showToast('Profile saved');
     } catch (err) {
       setError(err);
     } finally {
@@ -100,8 +111,27 @@ export default function ProfilePage() {
               />
             </label>
 
+            <div className="mute-rules">
+              <span className="mute-rules-label">Notify me for these alerts</span>
+              {rules.map((rule) => (
+                <label key={rule._id} className="mute-rule-row">
+                  <span>{rule.name}</span>
+                  <label className="toggle">
+                    <input
+                      type="checkbox"
+                      checked={!mutedRuleTypes.includes(rule.type)}
+                      onChange={() => toggleMute(rule.type)}
+                    />
+                    <span className="toggle-slider" />
+                  </label>
+                </label>
+              ))}
+              <p className="rule-description">
+                Turn a rule off here and it still runs and shows in Alert History, just without a Telegram message.
+              </p>
+            </div>
+
             <div className="rule-card-footer">
-              {savedAt && <span className="saved-indicator">Saved {savedAt.toLocaleTimeString()}</span>}
               <button className="refresh-btn" type="submit" disabled={saving}>
                 {saving ? 'Saving…' : 'Save changes'}
               </button>

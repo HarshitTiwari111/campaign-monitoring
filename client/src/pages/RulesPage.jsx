@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { fetchRules, updateRule } from '../services/api';
+import { useToast } from '../context/ToastContext';
 
 const THRESHOLD_LABELS = {
   LANDING_CLICK_COUNT: 'Min. landing clicks',
@@ -107,6 +108,7 @@ export default function RulesPage() {
   const [rules, setRules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { showToast } = useToast();
 
   const load = () => {
     setLoading(true);
@@ -121,6 +123,7 @@ export default function RulesPage() {
   const handleSave = async (id, payload) => {
     const updated = await updateRule(id, payload);
     setRules((prev) => prev.map((r) => (r._id === id ? updated : r)));
+    showToast(`"${updated.name}" saved`);
   };
 
   return (

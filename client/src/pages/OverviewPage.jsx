@@ -15,6 +15,7 @@ export default function OverviewPage() {
   const { isAdmin } = useAuth();
   const [lastUpdated, setLastUpdated] = useState(null);
   const [mediaBuyers, setMediaBuyers] = useState(null);
+  const [campaignSearch, setCampaignSearch] = useState('');
 
   const {
     data: campaigns,
@@ -60,6 +61,10 @@ export default function OverviewPage() {
   const attentionCampaigns = campaignList.filter((c) => c.status !== 'HEALTHY');
   const visibleAttentionCampaigns = attentionCampaigns.slice(0, MAX_ATTENTION_CARDS);
   const hiddenAttentionCount = attentionCampaigns.length - visibleAttentionCampaigns.length;
+
+  const filteredCampaigns = campaignSearch
+    ? campaignList.filter((c) => c.campaignName.toLowerCase().includes(campaignSearch.toLowerCase()))
+    : campaignList;
 
   return (
     <div className="page">
@@ -111,10 +116,21 @@ export default function OverviewPage() {
       <section>
         <div className="section-heading">
           <h2>{isAdmin ? 'All Campaigns' : 'My Campaigns'}</h2>
-          <span className="section-count">{campaignList.length}</span>
+          <span className="section-count">{filteredCampaigns.length}</span>
+        </div>
+        <div className="filter-bar">
+          <label className="field field-search">
+            <span>Search campaign</span>
+            <input
+              type="text"
+              value={campaignSearch}
+              onChange={(e) => setCampaignSearch(e.target.value)}
+              placeholder="e.g. Weight Loss"
+            />
+          </label>
         </div>
         <CampaignTable
-          campaigns={campaignList}
+          campaigns={filteredCampaigns}
           mediaBuyers={isAdmin ? mediaBuyers || [] : undefined}
           onAssign={isAdmin ? handleAssign : undefined}
         />
