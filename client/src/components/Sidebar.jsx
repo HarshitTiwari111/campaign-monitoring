@@ -104,7 +104,7 @@ export default function Sidebar() {
         <div className="sidebar-top-row">
           <div className="sidebar-brand">
             <div className="brand-mark">
-              <Logo />
+              <Logo size={18} />
             </div>
             <h1>Campaign Monitoring</h1>
           </div>
