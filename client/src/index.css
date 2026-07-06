@@ -157,23 +157,21 @@ body {
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   padding: 4px 8px 28px;
+  min-width: 0;
 }
 
 .sidebar-brand h1 {
   margin: 0;
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.3;
   color: #ffffff;
-}
-
-.sidebar-brand .subtitle {
-  font-size: 11.5px;
-  margin: 1px 0 0;
-  color: #8b9ac2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hamburger-btn {
@@ -1215,10 +1213,6 @@ tbody tr:nth-child(even):hover {
 
   .sidebar-brand {
     padding: 0;
-  }
-
-  .sidebar-brand .subtitle {
-    display: none;
   }
 
   .hamburger-btn {

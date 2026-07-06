@@ -106,10 +106,7 @@ export default function Sidebar() {
             <div className="brand-mark">
               <Logo />
             </div>
-            <div>
-              <h1>Campaign Monitoring</h1>
-              <p className="subtitle">Google Ads CPS alerts</p>
-            </div>
+            <h1>Campaign Monitoring</h1>
           </div>
           <button
             className="hamburger-btn"
