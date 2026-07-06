@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { fetchRules, updateRule } from '../services/api';
 
 const THRESHOLD_LABELS = {
@@ -131,7 +132,7 @@ export default function RulesPage() {
       )}
 
       {loading ? (
-        <p className="loading-text">Loading rules…</p>
+        <LoadingSpinner label="Loading rules…" />
       ) : (
         <div className="rules-grid">
           {rules.map((rule) => (

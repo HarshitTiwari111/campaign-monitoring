@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { fetchUsers, createUserAccount, updateUserAccount, deactivateUserAccount } from '../services/api';
 
 const EMPTY_FORM = { username: '', password: '', name: '', role: 'media_buyer', telegramChatId: '', telegramBotToken: '' };
@@ -212,7 +213,7 @@ export default function UsersPage() {
           <span className="section-count">{users.length}</span>
         </div>
         {loading ? (
-          <p className="loading-text">Loading accounts…</p>
+          <LoadingSpinner label="Loading accounts…" />
         ) : (
           <div className="rules-grid">
             {users.map((u) => (

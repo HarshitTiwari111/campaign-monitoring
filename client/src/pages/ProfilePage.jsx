@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageHeader from '../components/PageHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { fetchMyProfile, updateMyProfile } from '../services/api';
 
 export default function ProfilePage() {
@@ -45,7 +46,7 @@ export default function ProfilePage() {
       )}
 
       {loading ? (
-        <p className="loading-text">Loading profile…</p>
+        <LoadingSpinner label="Loading profile…" />
       ) : (
         <div className="rule-card profile-card">
           <div className="profile-info">

@@ -655,6 +655,53 @@ section {
   font-size: 14px;
 }
 
+/* Loading spinner - bars echo the logo's bar-chart motif */
+.loading-spinner-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 0;
+}
+
+.loading-spinner-wrap.loading-spinner-full {
+  min-height: 60vh;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+}
+
+.loading-spinner span {
+  width: 6px;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--accent-hover), var(--accent));
+  transform-origin: center;
+  animation: loading-bar-bounce 1s ease-in-out infinite;
+}
+
+.loading-spinner span:nth-child(1) { animation-delay: 0s; }
+.loading-spinner span:nth-child(2) { animation-delay: 0.12s; }
+.loading-spinner span:nth-child(3) { animation-delay: 0.24s; }
+.loading-spinner span:nth-child(4) { animation-delay: 0.36s; }
+
+@keyframes loading-bar-bounce {
+  0%, 100% { transform: scaleY(0.35); opacity: 0.5; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+.loading-spinner-label {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
 .all-clear {
   display: flex;
   align-items: center;

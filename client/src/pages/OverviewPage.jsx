@@ -3,6 +3,7 @@ import PageHeader from '../components/PageHeader';
 import StatsOverview from '../components/StatsOverview';
 import CampaignCard from '../components/CampaignCard';
 import CampaignTable from '../components/CampaignTable';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { usePolling } from '../hooks/usePolling';
 import { fetchCampaigns, fetchAlertHistory, fetchUsers, assignCampaign } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -83,7 +84,7 @@ export default function OverviewPage() {
           {attentionCampaigns.length > 0 && <span className="section-count">{attentionCampaigns.length}</span>}
         </div>
         {campaignsLoading ? (
-          <p className="loading-text">Loading campaigns…</p>
+          <LoadingSpinner label="Loading campaigns…" />
         ) : attentionCampaigns.length === 0 ? (
           <div className="all-clear">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

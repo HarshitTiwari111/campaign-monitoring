@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import AlertHistoryTable from '../components/AlertHistoryTable';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { usePolling } from '../hooks/usePolling';
 import { fetchAlertHistory } from '../services/api';
 
@@ -33,7 +34,7 @@ export default function AlertHistoryPage() {
       )}
 
       <section>
-        {loading ? <p className="loading-text">Loading alerts…</p> : <AlertHistoryTable alerts={alerts} />}
+        {loading ? <LoadingSpinner label="Loading alerts…" /> : <AlertHistoryTable alerts={alerts} />}
 
         {pagination && pagination.totalPages > 1 && (
           <div className="pagination">
