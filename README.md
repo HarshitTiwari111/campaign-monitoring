@@ -296,10 +296,15 @@ Express API and the static React build.
 6. Point your landing pages' tracking script (see above) and Google Ads
    tracking template at the backend's live URL instead of `localhost`.
 
-Render's free tier spins down web services after inactivity - the first
-request after idling takes ~30-60s to wake up, and the every-minute cron
-job will not fire while asleep. Fine for testing; upgrade the plan (or
-self-host) for real always-on monitoring.
+Render's free tier spins down web services after ~15 minutes of no traffic -
+the first request after idling takes ~30-60s to wake up, and the
+every-minute cron job won't fire while asleep. This repo includes a free
+fix: `.github/workflows/keep-alive.yml` pings the backend's `/api/health`
+every 10 minutes via GitHub Actions (needs no paid plan, no extra account -
+just this repo on GitHub with Actions enabled, which is on by default).
+Cost: a few seconds of Actions runtime per ping, well within the free
+minutes GitHub gives every account. For guaranteed always-on latency
+regardless of traffic, upgrade Render's plan (or self-host) instead.
 
 ## API Reference
 
