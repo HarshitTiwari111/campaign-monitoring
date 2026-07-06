@@ -95,7 +95,8 @@
 .scroll-hidden,
 .main-content,
 .sidebar,
-.table-wrapper {
+.table-wrapper,
+.table-scroll-limited {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -103,7 +104,8 @@
 .scroll-hidden::-webkit-scrollbar,
 .main-content::-webkit-scrollbar,
 .sidebar::-webkit-scrollbar,
-.table-wrapper::-webkit-scrollbar {
+.table-wrapper::-webkit-scrollbar,
+.table-scroll-limited::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
@@ -985,6 +987,21 @@ section {
   overflow-x: auto;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
+}
+
+/* Caps the visible rows to ~10 and scrolls the rest, with the header
+   pinned so column labels stay put while scrolling. Scrollbar itself is
+   hidden via the .table-scroll-limited entry above; the wheel/touch
+   scroll still works normally. */
+.table-scroll-limited {
+  max-height: 522px;
+  overflow-y: auto;
+}
+
+.table-scroll-limited thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 table {

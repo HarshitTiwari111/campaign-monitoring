@@ -10,7 +10,7 @@ const STATUS_PILL_CLASS = {
 
 export default function AlertHistoryTable({ alerts }) {
   return (
-    <div className="table-wrapper">
+    <div className="table-wrapper table-scroll-limited">
       <table>
         <thead>
           <tr>
