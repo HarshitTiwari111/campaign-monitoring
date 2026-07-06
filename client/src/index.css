@@ -655,13 +655,13 @@ section {
   font-size: 14px;
 }
 
-/* Loading spinner - bars echo the logo's bar-chart motif */
+/* Loading spinner - rotating ring in the accent color */
 .loading-spinner-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 14px;
   padding: 40px 0;
 }
 
@@ -669,30 +669,17 @@ section {
   min-height: 60vh;
 }
 
-.loading-spinner {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  height: 26px;
+.loading-spinner-ring {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--bg-subtle-2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: loading-spin 0.7s linear infinite;
 }
 
-.loading-spinner span {
-  width: 6px;
-  height: 100%;
-  border-radius: 3px;
-  background: linear-gradient(180deg, var(--accent-hover), var(--accent));
-  transform-origin: center;
-  animation: loading-bar-bounce 1s ease-in-out infinite;
-}
-
-.loading-spinner span:nth-child(1) { animation-delay: 0s; }
-.loading-spinner span:nth-child(2) { animation-delay: 0.12s; }
-.loading-spinner span:nth-child(3) { animation-delay: 0.24s; }
-.loading-spinner span:nth-child(4) { animation-delay: 0.36s; }
-
-@keyframes loading-bar-bounce {
-  0%, 100% { transform: scaleY(0.35); opacity: 0.5; }
-  50% { transform: scaleY(1); opacity: 1; }
+@keyframes loading-spin {
+  to { transform: rotate(360deg); }
 }
 
 .loading-spinner-label {
